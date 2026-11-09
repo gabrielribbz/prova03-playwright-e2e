@@ -1,30 +1,21 @@
-import { PlaywrightTestConfig } from '@playwright/test';
+import { defineConfig, devices } from '@playwright/test';
 
-const config: PlaywrightTestConfig = {
-  testDir: 'src/scenarios',
-  timeout: 120000,
+export default defineConfig({
+  testDir: './src/scenarios',
+  fullyParallel: false,
   retries: 0,
+  workers: 1,
+  reporter: 'html',
   use: {
-    trace: 'on',
-    channel: 'msedge',
-    locale: 'pt-BR',
-    headless: true,
-    viewport: { width: 1280, height: 720 },
-    ignoreHTTPSErrors: true,
-    screenshot: 'on',
-    video: 'off'
+    trace: 'on-first-retry',
   },
-  expect: {
-    timeout: 30000
-  },
-  reporter: [
-    [
-      'html',
-      {
-        outputFolder: 'artifacts/report',
-        open: 'never'
-      }
-    ]
-  ]
-};
-export default config;
+  projects: [
+    {
+      name: 'chromium',
+      use: { 
+        ...devices['Desktop Chrome'], 
+        channel: 'chrome'
+      },
+    },
+  ],
+});
